@@ -1,0 +1,156 @@
+テストケースの実行方法
+
+android_util_testsプロジェクトのtest_server/commands.txtを参考にテスト用サーバを作って起動しておく。ここは同じ動作をすればRailsでも何でも良い。
+
+テスト対象のandroidプロジェクト(ここではandroid_utils)を普段通り作る。
+
+android_utilsプロジェクトではインターネットにアクセスするので、AndroidManifest.xmlに
+<uses-permission android:name="android.permission.INTERNET"/>
+の追加が必要。追加後は
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="net.it4myself.util"
+      android:versionCode="1"
+      android:versionName="1.0.0">
+    <application android:icon="@drawable/icon" android:label="@string/app_name">
+        <activity android:name=".androidUtils"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+	<uses-permission android:name="android.permission.INTERNET"/>
+</manifest> 
+となる。
+
+普通通りにテスト対象のアプリケーションを書く。
+今回はRESTfulなHTTPクライアントのラッパークラスである
+net.it4myself.util.RestfulRails
+と、ハッシュ構造をメモリ上とSQLiteに保持し、再起動後も同じconfigのような設定値を保持し続ける
+net.it4myself.util.Settings
+の2つを用意した。
+なお、RestfulRailsクラスは、XMLハンドラを指定することにより
+org.w3c.dom.Document
+を返り値として受け取ることが出来るため、透過的にサーバサイドプログラムと通信することが可能。
+
+android_utilsプロジェクトのテスト実行用プロジェクト(ここではandroid_uril_tests)を作る。
+
+テスト用プロジェクトといえど、apkファイルを作成してインストールする必要があるので、AndroidManifest.xmlを用意する必要がある。書式は
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="(テスト用のパッケージ名)">
+    <application>
+        <uses-library android:name="android.test.runner" />
+    </application>
+    <instrumentation android:name="android.test.InstrumentationTestRunner"
+                     android:targetPackage="(テスト対象パッケージ名)"
+                     android:label="(メモ? どこかで使用される?)"/>
+</manifest> 
+となり、今回は
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="net.it4myself.util.tests">
+    <application>
+        <uses-library android:name="android.test.runner" />
+    </application>
+    <instrumentation android:name="android.test.InstrumentationTestRunner"
+                     android:targetPackage="net.it4myself.util"
+                     android:label="Tests for Android_utils."/>
+</manifest> 
+のように設定した。
+
+テスト対象のパッケージをビルドパスに含めるため、
+android_util_testプロジェクトを右クリックしてPropertiesを開き、
+左メニューからJava Build Pathを選択。
+次に右上方のProjectsタブを選択。
+Addボタンを押してテスト対象のプロジェクトを追加する。
+結果以下のようになったところでOKボタンを押して閉じる。
+
+全テストケース実行用のラッパークラスを用意する。これは完全にコピペでOK。
+package net.it4myself.util.tests;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import android.test.suitebuilder.TestSuiteBuilder;
+
+public class AllTests extends TestSuite {
+
+    public static Test suite() {
+        return new TestSuiteBuilder(AllTests.class)
+                .includeAllPackagesUnderHere()
+                .build();
+    }
+}
+
+
+あとはテストケースを書くだけ。
+基本はjunit.framework.TestCaseを継承してテストケースを作る。
+テストケースの書き方は一般的なUnitテストと同じ。一応
+http://code.google.com/intl/ja/android/reference/junit/framework/TestCase.html
+にも説明はあるけど、わからなければ「java unit テスト」あたりでググろう。
+
+テストケースの種類については、Android勉強会2008/10/6の江川さんの資料がわかりやすいかも。(全体の4/5あたりにあります)
+http://www.android-group.jp/index.php?plugin=attach&refer=%CA%D9%B6%AF%B2%F1%2F20081006%CA%D9%B6%AF%B2%F1&openfile=android_study_meeting_20081006_SDK10.pdf
+
+より詳しい説明はandroid.test.InstrumentationTestRunnerのドキュメントを見るべし。(英語)
+http://code.google.com/intl/ja/android/reference/android/test/InstrumentationTestRunner.html
+
+これで、テスト対象プロジェクトと、テスト実行用プロジェクトは完成したので、テストの実行に進む。
+
+
+
+Eclipseで作っているなら、(エラーがなければ)既にapkファイルの生成までは終わっているはず。
+
+Androidエミュレータを立ち上げて、
+$ adb devices
+List of devices attached 
+emulator-5554	device
+
+でエミュレータが認識されていることを確認。(以下エミュレータの数は1つと仮定して進めます)
+
+$ adb install -r path/to/android_shared_libraries/android_utils/bin/android_utils.apk
+199 KB/s (13340 bytes in 0.065s)
+	pkg: /data/local/tmp/android_utils.apk
+Success
+と
+$ adb install -r path/to/android_shared_libraries/android_util_tests/bin/android_util_tests.apk
+312 KB/s (17883 bytes in 0.055s)
+	pkg: /data/local/tmp/android_util_tests.apk
+Success
+でテスト対象プロジェクトと、テスト実行用プロジェクトをインストールする。(ここではコマンドラインからインストールするが、Eclipse上からインストールしても良い)
+
+
+きちんとインストールできたか確認。
+$ adb shell pm list packages
+package:com.android.phone
+package:com.android.calculator2
+package:com.android.alarmclock
+...
+package:net.it4myself.util.tests
+package:com.android.providers.settings
+package:net.it4myself.util
+package:com.android.providers.telephony
+package:com.android.soundrecorder
+で、net.it4myself.util.testsとnet.it4myself.utilが表示されることを確認。表示されてない場合はパッケージが認識されてないので、これまでの手順を再確認。
+
+$ adb shell am instrument -w net.it4myself.util.tests/android.test.InstrumentationTestRunner
+(省略)
+net.it4myself.util.tests.SettingsTest:.......
+Test results for InstrumentationTestRunner=..F..F....E.E........
+Time: 36.48
+
+FAILURES!!!
+Tests run: 17,  Failures: 2,  Errors: 2
+ようにテストが実行される。
+
+この時の書式は
+adb shell am instrument -w (テスト実行用パッケージ名)/android.test.InstrumentationTestRunner
+で全テスト実行、
+adb shell am instrument -w -e class (テストケースのクラス) (テスト実行用パッケージ名)/android.test.InstrumentationTestRunner 
+で1つのテストケースのみ実行などなど、色々オプションがある。
+
+詳しくはandroid.test.InstrumentationTestRunnerのドキュメントを見るべし。
+http://code.google.com/intl/ja/android/reference/android/test/InstrumentationTestRunner.html
