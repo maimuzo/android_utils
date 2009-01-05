@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="net.it4myself.util.tests">
+    <application>
+        <uses-library android:name="android.test.runner" />
+    </application>
+    <instrumentation android:name="android.test.InstrumentationTestRunner"
+                     android:targetPackage="net.it4myself.util"
+                     android:label="Tests for Android_utils."/>
+</manifest> 

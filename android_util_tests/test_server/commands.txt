@@ -1,0 +1,23 @@
+Operation history.
+
+Generate project and pages:
+rails test_server
+cd test_server
+script/generate scaffold User key:string, name:string
+
+Edit next file:
+app/models/users.rb
+
+class User < ActiveRecord::Base
+>  validates_presence_of :key, :name
+>  validates_uniqueness_of :key
+end
+
+Migration:
+rake db:migrate
+
+boot server:
+script/server
+
+
+
