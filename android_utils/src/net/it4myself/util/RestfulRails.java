@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 
@@ -30,6 +31,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import android.util.Log;
@@ -124,6 +127,36 @@ public class RestfulRails {
 		HttpDelete method = new HttpDelete(fulluri);
 		return getDOM(DoRequest(method), builder);
 	}
+	
+	/*
+	 * DocumentBuilderFactory.newInstance()
+	 * 	.setValidating(true)
+	 * 	.setIgnoringElementContentWhitespace(true)
+	 * 	.newDocumentBuilder()
+	 *  .parse(hoge);
+	 *  でうまく空ノードを取ってくれそうだけど、バリデータが実装されてないのか例外が出る。
+	 *  また
+	 *  Node.normalize()もなんか変
+	 *  なので、自前で改行やスペースだけのテキストノードを削除する。
+	 */
+    public static Node RemoveEmptyNodes(Node currentNode) {
+        NodeList list = currentNode.getChildNodes();
+        int n = list.getLength();
+        if(0 < n){
+            for (int i = 0; i < n; i++) {
+                Node childNode = list.item(i);
+                String value = childNode.getNodeValue();
+                // Log.v(TAG, "value : " + value);
+                if(Node.TEXT_NODE == childNode.getNodeType() && value.trim().equals("")){
+                	// Log.v(TAG, "remove " + Integer.toString(i) + "th node of " + currentNode.getNodeName());
+                	currentNode.removeChild(childNode);
+                }else{
+                	RemoveEmptyNodes(childNode);
+                }
+            }
+        }
+        return currentNode;
+    }
 
 	
 	private static HttpEntity DoRequest(HttpUriRequest method) throws ClientProtocolException, IOException {

@@ -8,6 +8,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.http.client.ClientProtocolException;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -18,7 +19,9 @@ import android.test.AndroidTestCase;
 import android.util.Log;
 
 /*
- * adb shell am instrument -w net.it4myself.hyperonigokko.tests/android.test.InstrumentationTestRunner 
+ * adb shell am instrument -w net.it4myself.util.tests/android.test.InstrumentationTestRunner 
+ * adb shell am instrument -w -e class net.it4myself.util.tests.RestfulRailsTest net.it4myself.util.tests/android.test.InstrumentationTestRunner 
+ * adb shell am instrument -w -e class net.it4myself.util.tests.RestfulRailsTest#testShouldGetListAndGetDOM net.it4myself.util.tests/android.test.InstrumentationTestRunner 
  */
 
 public class RestfulRailsTest extends AndroidTestCase {
@@ -29,8 +32,10 @@ public class RestfulRailsTest extends AndroidTestCase {
     protected void setUp() {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		//factory.setNamespaceAware(true);
-		
+		//factory.setValidating(true);
+		//factory.setIgnoringElementContentWhitespace(true);
 		try {
+			//factory.setFeature("http://xml.org/sax/features/validation", true);
 			builder = factory.newDocumentBuilder();
 			deleteAll();
 		} catch (ParserConfigurationException e) {
@@ -134,16 +139,19 @@ public class RestfulRailsTest extends AndroidTestCase {
         	RestfulRails.Post(HOST + "/users.xml", params);
 
         	Document result = RestfulRails.Get(HOST + "/users.xml", null, builder);
-    		NodeList list = result.getDocumentElement().getChildNodes();
-    		Node node1;
-    		for (int i=0; null != (node1 = list.item(i)); i++) {
-    			Log.v(TAG, node1.getNodeName());
-    		}
-
+    		
+        	// for included empty nodes
+        	loggingDocument(result.getDocumentElement(), 0);
+    		Node removedNode = RestfulRails.RemoveEmptyNodes(result.getDocumentElement());
+    		
+    		// for removed empty nodes
+    		loggingDocument(removedNode, 0);
+    		
+    		NodeList list = removedNode.getChildNodes();
     		assertEquals(3, list.getLength());
     		Node target = list.item(0);
     		assertEquals("user", target.getNodeName());
-    		assertEquals("31", target.getChildNodes().item(1).getFirstChild().getNodeValue());
+    		assertEquals("31", target.getChildNodes().item(2).getFirstChild().getNodeValue());
 			return;
 		} catch (ClientProtocolException e) {
 			Log.v(TAG, e.getMessage());
@@ -155,7 +163,11 @@ public class RestfulRailsTest extends AndroidTestCase {
 			Log.v(TAG, e.getMessage());
 			e.printStackTrace();
 		}
-		assertTrue(false);
+/*		catch (DOMException e){
+			Log.v(TAG, e.getMessage());
+			e.printStackTrace();
+		}
+*/		assertTrue(false);
     }
 
     public void testShouldGetRecoadAndGetString() {
@@ -164,7 +176,7 @@ public class RestfulRailsTest extends AndroidTestCase {
         	params.put("user[key]", "41");
         	params.put("user[name]", "forGetRecord1");
         	params.put("from", "unittest"); // this is a marker. not use.
-        	String postedId = getIdString(RestfulRails.Post(HOST + "/users.xml", params, builder));
+        	String postedId = getIdString(RestfulRails.Post(HOST + "/users.xml", params, builder), "post");
 
     		String result = RestfulRails.Get(HOST + "/users/" + postedId + ".xml", null);
 			Log.v(TAG, result);
@@ -189,14 +201,17 @@ public class RestfulRailsTest extends AndroidTestCase {
         	params.put("user[key]", "51");
         	params.put("user[name]", "forGetRecord1");
         	params.put("from", "unittest"); // this is a marker. not use.
-        	String postedId = getIdString(RestfulRails.Post(HOST + "/users.xml", params, builder));
+        	String postedId = getIdString(RestfulRails.Post(HOST + "/users.xml", params, builder), "post");
 
         	Document result = RestfulRails.Get(HOST + "/users/" + postedId + ".xml", null, builder);
-    		Log.v(TAG, result.toString());
+        	// loggingDocument(result, 0);
     		
-    		NodeList list = result.getDocumentElement().getChildNodes();
-    		assertEquals(1, list.getLength());
-    		Node target = list.item(0);
+    		Node removedNode = RestfulRails.RemoveEmptyNodes(result.getDocumentElement());
+    		loggingDocument(removedNode, 0);
+
+    		NodeList list = removedNode.getChildNodes();
+    		assertEquals(5, list.getLength());
+    		Node target = list.item(1);
     		assertEquals("id", target.getNodeName());
     		assertEquals(postedId, target.getFirstChild().getNodeValue());
 			return;
@@ -219,14 +234,18 @@ public class RestfulRailsTest extends AndroidTestCase {
         	params.put("user[key]", "61");
         	params.put("user[name]", "forPutRecord1");
         	params.put("from", "unittest"); // this is a marker. not use.
-        	String postedId = getIdString(RestfulRails.Post(HOST + "/users.xml", params, builder));
+        	Document postResult = RestfulRails.Post(HOST + "/users.xml", params, builder);
+        	String postedId = getIdString(postResult, "post");
 
         	params.put("user[id]", postedId);
+        	params.put("user[key]", "61");
+        	params.put("user[name]", "forPutRecord1Modified");
 
-        	String putId = getIdString(RestfulRails.Put(HOST + "/users/" + postedId + ".xml", params, builder));
+        	Document putResult = RestfulRails.Put(HOST + "/users/" + postedId + ".xml", params, builder);
+        	loggingDocument(putResult, 0);
         	
-    		String result = RestfulRails.Get(HOST + "/users/" + putId + ".xml", params);
-			Log.v(TAG, result);
+    		String result = RestfulRails.Get(HOST + "/users/" + postedId + ".xml", params);
+			Log.v(TAG, "get agein:" + result);
     		assertTrue(null != result);
 			return;
 		} catch (ClientProtocolException e) {
@@ -245,26 +264,31 @@ public class RestfulRailsTest extends AndroidTestCase {
     public void testShouldPutAndGetDOM(){
     	try {
         	HashMap<String,String> params = new HashMap<String,String>();
-        	params.put("user[key]", "61");
+        	params.put("user[key]", "62");
         	params.put("user[name]", "forPutRecord1");
         	params.put("from", "unittest"); // this is a marker. not use.
-        	String postedId = getIdString(RestfulRails.Post(HOST + "/users.xml", params, builder));
+        	Document postResult = RestfulRails.Post(HOST + "/users.xml", params, builder);
+        	String postedId = getIdString(postResult, "post");
 
         	params.put("user[id]", postedId);
-        	params.put("user[key]", "62");
-        	params.put("user[name]", "forPutRecord1Modified");
+        	String modifedName = "forPutRecord2Modified";
+        	params.put("user[name]", modifedName);
 
-        	String putId = getIdString(RestfulRails.Put(HOST + "/users/" + postedId + ".xml", params, builder));
+        	Document putResult = RestfulRails.Put(HOST + "/users/" + postedId + ".xml", params, builder);
+        	loggingDocument(putResult, 0);
         	
-        	Document result = RestfulRails.Get(HOST + "/users/" + putId + ".xml", null, builder);
-    		Log.v(TAG, result.toString());
+        	Document result = RestfulRails.Get(HOST + "/users/" + postedId + ".xml", null, builder);
+        	// loggingDocument(result, 0);
     		
-    		NodeList list = result.getDocumentElement().getChildNodes();
-    		assertEquals(1, list.getLength());
-    		Node target = list.item(0);
-    		assertEquals("id", target.getNodeName());
-    		assertEquals(putId, target.getFirstChild().getNodeValue());
-    		assertEquals("62", list.item(1).getFirstChild().getNodeValue());
+    		Node removedNode = RestfulRails.RemoveEmptyNodes(result.getDocumentElement());
+    		loggingDocument(removedNode, 0);
+    		
+    		NodeList list = removedNode.getChildNodes();
+    		assertEquals(5, list.getLength());
+    		assertEquals("id", list.item(1).getNodeName());
+    		assertEquals(postedId, list.item(1).getFirstChild().getNodeValue());
+    		assertEquals("62", list.item(2).getFirstChild().getNodeValue());
+    		assertEquals(modifedName, list.item(3).getFirstChild().getNodeValue());
 			return;
 		} catch (ClientProtocolException e) {
 			Log.v(TAG, e.getMessage());
@@ -333,9 +357,10 @@ public class RestfulRailsTest extends AndroidTestCase {
 		}
     }
     
-    private String getIdString(Document postedRecord){
-		Log.v(TAG, "in getIdString:" + postedRecord.toString());
-		NodeList postedList = postedRecord.getDocumentElement().getChildNodes();
+    private String getIdString(Document targetDocument, String when){
+    	Log.v(TAG, "in getIdString at:" + when);
+    	loggingDocument(targetDocument, 0);
+		NodeList postedList = targetDocument.getDocumentElement().getChildNodes();
 		Node postedNode;
 		String postedId = "";
 		for (int i=0; null != (postedNode = postedList.item(i)); i++) {
@@ -344,7 +369,28 @@ public class RestfulRailsTest extends AndroidTestCase {
 				break;
 			}
 		}
-		Log.v(TAG, "postedId:" + postedId);
+		Log.v(TAG, "Id:" + postedId);
     	return postedId;
     }
+    
+    public void loggingDocument(Node node, int depth) {
+        StringBuilder sb = new StringBuilder();
+        String name = node.getNodeName();
+        for (int i = 0; i < depth; i++) {
+            sb.append(" ");
+        }
+        short nodeType = node.getNodeType();
+        sb.append(name).append('(').append(nodeType).append(')');
+        if(Node.TEXT_NODE == nodeType || Node.DOCUMENT_NODE == nodeType){
+        	sb.append('[').append(node.getNodeValue()).append(']');
+        }
+    	Log.v(TAG, sb.toString());
+        NodeList list = node.getChildNodes();
+        int n = list.getLength();
+        for (int i = 0; i < n; i++) {
+            Node child = list.item(i);
+            loggingDocument(child, depth + 2);
+        }
+    }
+
 }
