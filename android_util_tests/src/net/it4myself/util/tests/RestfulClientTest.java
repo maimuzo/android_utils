@@ -14,7 +14,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import net.it4myself.util.RestfulRails;
+import net.it4myself.util.RestfulClient;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
@@ -24,7 +24,7 @@ import android.util.Log;
  * adb shell am instrument -w -e class net.it4myself.util.tests.RestfulRailsTest#testShouldGetListAndGetDOM net.it4myself.util.tests/android.test.InstrumentationTestRunner 
  */
 
-public class RestfulRailsTest extends AndroidTestCase {
+public class RestfulClientTest extends AndroidTestCase {
 	private static String HOST = "http://192.168.10.181:3000"; // TODO: replace to your test server's IP
 	private static String TAG = "RestfulTest";
 	private DocumentBuilder builder;
@@ -60,7 +60,7 @@ public class RestfulRailsTest extends AndroidTestCase {
     	params.put("user[name]", "postTestForString");
     	params.put("from", "unittest"); // this is a marker. not use.
     	try {
-			String result = RestfulRails.Post(HOST + "/users.xml", params);
+			String result = RestfulClient.Post(HOST + "/users.xml", params);
 			Log.v(TAG, result);
 			assertTrue(null != result);
 			return;
@@ -82,7 +82,7 @@ public class RestfulRailsTest extends AndroidTestCase {
     	params.put("from", "unittest"); // this is a marker. not use.
     	boolean foundKey = false;
     	try {
-    		Document result = RestfulRails.Post(HOST + "/users.xml", params, builder);
+    		Document result = RestfulClient.Post(HOST + "/users.xml", params, builder);
 			Log.v(TAG, result.toString());
     		NodeList list = result.getDocumentElement().getChildNodes();
     		Node node;
@@ -109,7 +109,7 @@ public class RestfulRailsTest extends AndroidTestCase {
 
     public void testShouldGetListAndGetString() {
     	try {
-    		String result = RestfulRails.Get(HOST + "/users.xml", null);
+    		String result = RestfulClient.Get(HOST + "/users.xml", null);
     		Log.v(TAG, result);
     		assertTrue(null != result);
 			return;
@@ -130,19 +130,19 @@ public class RestfulRailsTest extends AndroidTestCase {
         	params.put("user[key]", "31");
         	params.put("user[name]", "forList1");
         	params.put("from", "unittest"); // this is a marker. not use.
-        	RestfulRails.Post(HOST + "/users.xml", params);
+        	RestfulClient.Post(HOST + "/users.xml", params);
         	params.put("user[key]", "32");
         	params.put("user[name]", "forList2");
-        	RestfulRails.Post(HOST + "/users.xml", params);
+        	RestfulClient.Post(HOST + "/users.xml", params);
         	params.put("user[key]", "33");
         	params.put("user[name]", "forList3");
-        	RestfulRails.Post(HOST + "/users.xml", params);
+        	RestfulClient.Post(HOST + "/users.xml", params);
 
-        	Document result = RestfulRails.Get(HOST + "/users.xml", null, builder);
+        	Document result = RestfulClient.Get(HOST + "/users.xml", null, builder);
     		
         	// for included empty nodes
         	loggingDocument(result.getDocumentElement(), 0);
-    		Node removedNode = RestfulRails.RemoveEmptyNodes(result.getDocumentElement());
+    		Node removedNode = RestfulClient.RemoveEmptyNodes(result.getDocumentElement());
     		
     		// for removed empty nodes
     		loggingDocument(removedNode, 0);
@@ -176,9 +176,9 @@ public class RestfulRailsTest extends AndroidTestCase {
         	params.put("user[key]", "41");
         	params.put("user[name]", "forGetRecord1");
         	params.put("from", "unittest"); // this is a marker. not use.
-        	String postedId = getIdString(RestfulRails.Post(HOST + "/users.xml", params, builder), "post");
+        	String postedId = getIdString(RestfulClient.Post(HOST + "/users.xml", params, builder), "post");
 
-    		String result = RestfulRails.Get(HOST + "/users/" + postedId + ".xml", null);
+    		String result = RestfulClient.Get(HOST + "/users/" + postedId + ".xml", null);
 			Log.v(TAG, result);
     		assertTrue(null != result);
 			return;
@@ -201,12 +201,12 @@ public class RestfulRailsTest extends AndroidTestCase {
         	params.put("user[key]", "51");
         	params.put("user[name]", "forGetRecord1");
         	params.put("from", "unittest"); // this is a marker. not use.
-        	String postedId = getIdString(RestfulRails.Post(HOST + "/users.xml", params, builder), "post");
+        	String postedId = getIdString(RestfulClient.Post(HOST + "/users.xml", params, builder), "post");
 
-        	Document result = RestfulRails.Get(HOST + "/users/" + postedId + ".xml", null, builder);
+        	Document result = RestfulClient.Get(HOST + "/users/" + postedId + ".xml", null, builder);
         	// loggingDocument(result, 0);
     		
-    		Node removedNode = RestfulRails.RemoveEmptyNodes(result.getDocumentElement());
+    		Node removedNode = RestfulClient.RemoveEmptyNodes(result.getDocumentElement());
     		loggingDocument(removedNode, 0);
 
     		NodeList list = removedNode.getChildNodes();
@@ -234,17 +234,17 @@ public class RestfulRailsTest extends AndroidTestCase {
         	params.put("user[key]", "61");
         	params.put("user[name]", "forPutRecord1");
         	params.put("from", "unittest"); // this is a marker. not use.
-        	Document postResult = RestfulRails.Post(HOST + "/users.xml", params, builder);
+        	Document postResult = RestfulClient.Post(HOST + "/users.xml", params, builder);
         	String postedId = getIdString(postResult, "post");
 
         	params.put("user[id]", postedId);
         	params.put("user[key]", "61");
         	params.put("user[name]", "forPutRecord1Modified");
 
-        	Document putResult = RestfulRails.Put(HOST + "/users/" + postedId + ".xml", params, builder);
+        	Document putResult = RestfulClient.Put(HOST + "/users/" + postedId + ".xml", params, builder);
         	loggingDocument(putResult, 0);
         	
-    		String result = RestfulRails.Get(HOST + "/users/" + postedId + ".xml", params);
+    		String result = RestfulClient.Get(HOST + "/users/" + postedId + ".xml", params);
 			Log.v(TAG, "get agein:" + result);
     		assertTrue(null != result);
 			return;
@@ -267,20 +267,20 @@ public class RestfulRailsTest extends AndroidTestCase {
         	params.put("user[key]", "62");
         	params.put("user[name]", "forPutRecord1");
         	params.put("from", "unittest"); // this is a marker. not use.
-        	Document postResult = RestfulRails.Post(HOST + "/users.xml", params, builder);
+        	Document postResult = RestfulClient.Post(HOST + "/users.xml", params, builder);
         	String postedId = getIdString(postResult, "post");
 
         	params.put("user[id]", postedId);
         	String modifedName = "forPutRecord2Modified";
         	params.put("user[name]", modifedName);
 
-        	Document putResult = RestfulRails.Put(HOST + "/users/" + postedId + ".xml", params, builder);
+        	Document putResult = RestfulClient.Put(HOST + "/users/" + postedId + ".xml", params, builder);
         	loggingDocument(putResult, 0);
         	
-        	Document result = RestfulRails.Get(HOST + "/users/" + postedId + ".xml", null, builder);
+        	Document result = RestfulClient.Get(HOST + "/users/" + postedId + ".xml", null, builder);
         	// loggingDocument(result, 0);
     		
-    		Node removedNode = RestfulRails.RemoveEmptyNodes(result.getDocumentElement());
+    		Node removedNode = RestfulClient.RemoveEmptyNodes(result.getDocumentElement());
     		loggingDocument(removedNode, 0);
     		
     		NodeList list = removedNode.getChildNodes();
@@ -309,17 +309,17 @@ public class RestfulRailsTest extends AndroidTestCase {
         	params.put("user[key]", "1");
         	params.put("user[name]", "fordelete1");
         	params.put("from", "unittest"); // this is a marker. not use.
-        	RestfulRails.Post(HOST + "/users.xml", params);
+        	RestfulClient.Post(HOST + "/users.xml", params);
         	params.put("user[key]", "2");
         	params.put("user[name]", "fordelete2");
-        	RestfulRails.Post(HOST + "/users.xml", params);
+        	RestfulClient.Post(HOST + "/users.xml", params);
         	params.put("user[key]", "3");
         	params.put("user[name]", "fordelete3");
-        	RestfulRails.Post(HOST + "/users.xml", params);
+        	RestfulClient.Post(HOST + "/users.xml", params);
     		
         	deleteAll();
 
-    		Document afterRecord = RestfulRails.Get(HOST + "/users.xml", null, builder);
+    		Document afterRecord = RestfulClient.Get(HOST + "/users.xml", null, builder);
     		if(afterRecord.getDocumentElement().hasChildNodes()){
     			assertTrue(false);
     		}else{
@@ -340,7 +340,7 @@ public class RestfulRailsTest extends AndroidTestCase {
     }
     
     private void deleteAll() throws ClientProtocolException, IOException, SAXException{
-		Document allRecord = RestfulRails.Get(HOST + "/users.xml", null, builder);
+		Document allRecord = RestfulClient.Get(HOST + "/users.xml", null, builder);
 		NodeList list = allRecord.getDocumentElement().getChildNodes();
 		Node node1;
 		for (int i=0; null != (node1 = list.item(i)); i++) {
@@ -349,7 +349,7 @@ public class RestfulRailsTest extends AndroidTestCase {
 	    		Node node2;
 	    		for (int ii=0; null != (node2 = userColumns.item(ii)); ii++) {
 	    			if(node2.getNodeName().equals("id")){
-	    				RestfulRails.Delete(HOST + "/users/" + node2.getFirstChild().getNodeValue() + ".xml", null);
+	    				RestfulClient.Delete(HOST + "/users/" + node2.getFirstChild().getNodeValue() + ".xml", null);
 	    				break;
 	    			}
 	    		}

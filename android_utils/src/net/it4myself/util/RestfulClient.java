@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 
@@ -37,7 +36,7 @@ import org.xml.sax.SAXException;
 
 import android.util.Log;
 
-public class RestfulRails {
+public class RestfulClient {
     private static final String TAG = "Restful";
 
 	public static String Get(String uri, HashMap<String,String> map) throws ClientProtocolException, IOException {
