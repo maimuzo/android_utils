@@ -1,1 +1,422 @@
 
+  [4;36;1mSQL (0.001813)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.001064)[0m   [0;1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;35;1mSQL (0.000338)[0m   [0mSELECT version FROM schema_migrations[0m
+Migrating to CreateUsers (20081229125658)
+Migrating to CreateUserbasics (20090117065434)
+  [4;36;1mSQL (0.000202)[0m   [0;1mselect sqlite_version(*)[0m
+  [4;35;1mSQL (0.086258)[0m   [0mCREATE TABLE "userbasics" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "key" varchar(255), "name" varchar(255), "created_at" datetime, "updated_at" datetime) [0m
+  [4;36;1mSQL (0.002355)[0m   [0;1mINSERT INTO schema_migrations (version) VALUES ('20090117065434')[0m
+  [4;35;1mSQL (0.000394)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.000281)[0m   [0;1mSELECT version FROM schema_migrations[0m
+  [4;35;1mSQL (0.000261)[0m   [0m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [4;36;1mSQL (0.000167)[0m   [0;1mPRAGMA index_list("userbasics")[0m
+  [4;35;1mSQL (0.000067)[0m   [0mPRAGMA index_list("users")[0m
+
+
+Processing UserbasicsController#index (for 127.0.0.1 at 2009-01-17 15:59:03) [GET]
+  Session ID: 6a478591316d2eb6e578bdba978b32a6
+  Parameters: {"action"=>"index", "controller"=>"userbasics"}
+Filter chain halted as [:auth] rendered_or_redirected.
+Completed in 0.00125 (801 reqs/sec) | Rendering: 0.00094 (75%) | DB: 0.00000 (0%) | 401 Unauthorized [http://localhost/userbasics]
+
+
+Processing UserbasicsController#index (for 127.0.0.1 at 2009-01-17 15:59:11) [GET]
+  Session ID: BAh7BiIKZmxhc2hJQzonQWN0aW9uQ29udHJvbGxlcjo6Rmxhc2g6OkZsYXNo
+SGFzaHsABjoKQHVzZWR7AA==--977b1efa1e22f47c51d2921c8fc1947224518b16
+  Parameters: {"action"=>"index", "controller"=>"userbasics"}
+  [4;36;1mUserbasic Load (0.001113)[0m   [0;1mSELECT * FROM "userbasics" [0m
+Rendering template within layouts/userbasics
+Rendering userbasics/index
+Completed in 0.01628 (61 reqs/sec) | Rendering: 0.00454 (27%) | DB: 0.00111 (6%) | 200 OK [http://localhost/userbasics]
+
+
+Processing UserbasicsController#index (for 127.0.0.1 at 2009-01-17 15:59:24) [GET]
+  Session ID: BAh7BiIKZmxhc2hJQzonQWN0aW9uQ29udHJvbGxlcjo6Rmxhc2g6OkZsYXNo
+SGFzaHsABjoKQHVzZWR7AA==--977b1efa1e22f47c51d2921c8fc1947224518b16
+  Parameters: {"action"=>"index", "controller"=>"userbasics"}
+  [4;35;1mUserbasic Load (0.000521)[0m   [0mSELECT * FROM "userbasics" [0m
+Rendering template within layouts/userbasics
+Rendering userbasics/index
+Completed in 0.00835 (119 reqs/sec) | Rendering: 0.00112 (13%) | DB: 0.00052 (6%) | 200 OK [http://localhost/userbasics]
+
+
+Processing UsersController#index (for 192.168.10.181 at 2009-01-17 17:24:49) [GET]
+  Session ID: e8449a7154d80014423588976ef8474d
+  Parameters: {"format"=>"xml", "action"=>"index", "controller"=>"users"}
+  [4;36;1mUser Load (0.001080)[0m   [0;1mSELECT * FROM "users" [0m
+Completed in 0.03030 (33 reqs/sec) | Rendering: 0.00079 (2%) | DB: 0.00108 (3%) | 200 OK [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#create (for 192.168.10.181 at 2009-01-17 17:24:52) [POST]
+  Session ID: 39279392cddbf7ea3b988f20295c20b6
+  Parameters: {"user"=>{"name"=>"fordelete1", "key"=>"1"}, "format"=>"xml", "from"=>"unittest", "action"=>"create", "controller"=>"users"}
+  [4;35;1mSQL (0.000213)[0m   [0mSELECT "key" FROM "users" WHERE ("users".key = '1') [0m
+  [4;36;1mUser Create (0.000590)[0m   [0;1mINSERT INTO "users" ("name", "updated_at", "key", "created_at") VALUES('fordelete1', '2009-01-17 08:24:52', '1', '2009-01-17 08:24:52')[0m
+Completed in 0.12814 (7 reqs/sec) | Rendering: 0.11202 (87%) | DB: 0.00080 (0%) | 201 Created [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#create (for 192.168.10.181 at 2009-01-17 17:24:54) [POST]
+  Session ID: ff423196a925165622144845c1b6387c
+  Parameters: {"user"=>{"name"=>"fordelete2", "key"=>"2"}, "format"=>"xml", "from"=>"unittest", "action"=>"create", "controller"=>"users"}
+  [4;35;1mSQL (0.000230)[0m   [0mSELECT "key" FROM "users" WHERE ("users".key = '2') [0m
+  [4;36;1mUser Create (0.000514)[0m   [0;1mINSERT INTO "users" ("name", "updated_at", "key", "created_at") VALUES('fordelete2', '2009-01-17 08:24:54', '2', '2009-01-17 08:24:54')[0m
+Completed in 0.01998 (50 reqs/sec) | Rendering: 0.00234 (11%) | DB: 0.00074 (3%) | 201 Created [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#create (for 192.168.10.181 at 2009-01-17 17:24:56) [POST]
+  Session ID: bd938c3a03b4c836e2b3a4cdd0c2fc7e
+  Parameters: {"user"=>{"name"=>"fordelete3", "key"=>"3"}, "format"=>"xml", "from"=>"unittest", "action"=>"create", "controller"=>"users"}
+  [4;35;1mSQL (0.000222)[0m   [0mSELECT "key" FROM "users" WHERE ("users".key = '3') [0m
+  [4;36;1mUser Create (0.000705)[0m   [0;1mINSERT INTO "users" ("name", "updated_at", "key", "created_at") VALUES('fordelete3', '2009-01-17 08:24:56', '3', '2009-01-17 08:24:56')[0m
+Completed in 0.01669 (59 reqs/sec) | Rendering: 0.00188 (11%) | DB: 0.00093 (5%) | 201 Created [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#index (for 192.168.10.181 at 2009-01-17 17:24:57) [GET]
+  Session ID: 41ad623a337374cdc0ac8e9981900058
+  Parameters: {"format"=>"xml", "action"=>"index", "controller"=>"users"}
+  [4;35;1mUser Load (0.000984)[0m   [0mSELECT * FROM "users" [0m
+Completed in 0.01295 (77 reqs/sec) | Rendering: 0.00451 (34%) | DB: 0.00098 (7%) | 200 OK [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#destroy (for 192.168.10.181 at 2009-01-17 17:24:57) [DELETE]
+  Session ID: 3391e1514710407ccaaa7dd8b9c58896
+  Parameters: {"format"=>"xml", "action"=>"destroy", "id"=>"340", "controller"=>"users"}
+  [4;36;1mUser Load (0.000333)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 340) [0m
+  [4;35;1mUser Destroy (0.000649)[0m   [0m DELETE FROM "users"
+ WHERE "id" = 340
+[0m
+Completed in 0.01443 (69 reqs/sec) | Rendering: 0.00054 (3%) | DB: 0.00098 (6%) | 200 OK [http://192.168.10.181/users/340.xml]
+
+
+Processing UsersController#destroy (for 192.168.10.181 at 2009-01-17 17:24:57) [DELETE]
+  Session ID: b89c6f0e9b7df8d07353b184085dc552
+  Parameters: {"format"=>"xml", "action"=>"destroy", "id"=>"341", "controller"=>"users"}
+  [4;36;1mUser Load (0.000286)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 341) [0m
+  [4;35;1mUser Destroy (0.000734)[0m   [0m DELETE FROM "users"
+ WHERE "id" = 341
+[0m
+Completed in 0.12603 (7 reqs/sec) | Rendering: 0.00049 (0%) | DB: 0.00102 (0%) | 200 OK [http://192.168.10.181/users/341.xml]
+
+
+Processing UsersController#destroy (for 192.168.10.181 at 2009-01-17 17:24:57) [DELETE]
+  Session ID: b7ab9b21b83c91774efb04f1090b7ed7
+  Parameters: {"format"=>"xml", "action"=>"destroy", "id"=>"342", "controller"=>"users"}
+  [4;36;1mUser Load (0.000564)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 342) [0m
+  [4;35;1mUser Destroy (0.000449)[0m   [0m DELETE FROM "users"
+ WHERE "id" = 342
+[0m
+Completed in 0.01311 (76 reqs/sec) | Rendering: 0.00044 (3%) | DB: 0.00101 (7%) | 200 OK [http://192.168.10.181/users/342.xml]
+
+
+Processing UsersController#index (for 192.168.10.181 at 2009-01-17 17:24:57) [GET]
+  Session ID: 366278d3eefd6a58be980e1a09dcbaf1
+  Parameters: {"format"=>"xml", "action"=>"index", "controller"=>"users"}
+  [4;36;1mUser Load (0.000601)[0m   [0;1mSELECT * FROM "users" [0m
+Completed in 0.00803 (124 reqs/sec) | Rendering: 0.00060 (7%) | DB: 0.00060 (7%) | 200 OK [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#index (for 192.168.10.181 at 2009-01-17 17:24:57) [GET]
+  Session ID: c74b34430f3383092c437e68688da2b0
+  Parameters: {"format"=>"xml", "action"=>"index", "controller"=>"users"}
+  [4;35;1mUser Load (0.000516)[0m   [0mSELECT * FROM "users" [0m
+Completed in 0.00734 (136 reqs/sec) | Rendering: 0.00061 (8%) | DB: 0.00052 (7%) | 200 OK [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#index (for 192.168.10.181 at 2009-01-17 17:24:58) [GET]
+  Session ID: 1afbc21473752a0a57ae0eaf3414d7eb
+  Parameters: {"format"=>"xml", "action"=>"index", "controller"=>"users"}
+  [4;36;1mUser Load (0.000493)[0m   [0;1mSELECT * FROM "users" [0m
+Completed in 0.00741 (135 reqs/sec) | Rendering: 0.00075 (10%) | DB: 0.00049 (6%) | 200 OK [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#create (for 192.168.10.181 at 2009-01-17 17:25:00) [POST]
+  Session ID: 6ed6bf2e72628c1627e030db5a89f59d
+  Parameters: {"user"=>{"name"=>"forList1", "key"=>"31"}, "format"=>"xml", "from"=>"unittest", "action"=>"create", "controller"=>"users"}
+  [4;35;1mSQL (0.000168)[0m   [0mSELECT "key" FROM "users" WHERE ("users".key = '31') [0m
+  [4;36;1mUser Create (0.000670)[0m   [0;1mINSERT INTO "users" ("name", "updated_at", "key", "created_at") VALUES('forList1', '2009-01-17 08:25:00', '31', '2009-01-17 08:25:00')[0m
+Completed in 0.01632 (61 reqs/sec) | Rendering: 0.00182 (11%) | DB: 0.00084 (5%) | 201 Created [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#create (for 192.168.10.181 at 2009-01-17 17:25:02) [POST]
+  Session ID: 84a45ebb38d56e396a234d6a36ebf6c8
+  Parameters: {"user"=>{"name"=>"forList2", "key"=>"32"}, "format"=>"xml", "from"=>"unittest", "action"=>"create", "controller"=>"users"}
+  [4;35;1mSQL (0.000198)[0m   [0mSELECT "key" FROM "users" WHERE ("users".key = '32') [0m
+  [4;36;1mUser Create (0.000499)[0m   [0;1mINSERT INTO "users" ("name", "updated_at", "key", "created_at") VALUES('forList2', '2009-01-17 08:25:02', '32', '2009-01-17 08:25:02')[0m
+Completed in 0.01764 (56 reqs/sec) | Rendering: 0.00146 (8%) | DB: 0.00070 (3%) | 201 Created [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#create (for 192.168.10.181 at 2009-01-17 17:25:04) [POST]
+  Session ID: 46908c831c4bcba306731baedeed58ab
+  Parameters: {"user"=>{"name"=>"forList3", "key"=>"33"}, "format"=>"xml", "from"=>"unittest", "action"=>"create", "controller"=>"users"}
+  [4;35;1mSQL (0.000191)[0m   [0mSELECT "key" FROM "users" WHERE ("users".key = '33') [0m
+  [4;36;1mUser Create (0.000735)[0m   [0;1mINSERT INTO "users" ("name", "updated_at", "key", "created_at") VALUES('forList3', '2009-01-17 08:25:04', '33', '2009-01-17 08:25:04')[0m
+Completed in 0.01871 (53 reqs/sec) | Rendering: 0.00224 (11%) | DB: 0.00093 (4%) | 201 Created [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#index (for 192.168.10.181 at 2009-01-17 17:25:04) [GET]
+  Session ID: fd371c3dcac452eac0ed4e470a47b8a2
+  Parameters: {"format"=>"xml", "action"=>"index", "controller"=>"users"}
+  [4;35;1mUser Load (0.000802)[0m   [0mSELECT * FROM "users" [0m
+Completed in 0.01206 (82 reqs/sec) | Rendering: 0.00446 (36%) | DB: 0.00080 (6%) | 200 OK [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#index (for 192.168.10.181 at 2009-01-17 17:25:05) [GET]
+  Session ID: 6a97e17933a2759c0710f395f3023088
+  Parameters: {"format"=>"xml", "action"=>"index", "controller"=>"users"}
+  [4;36;1mUser Load (0.000897)[0m   [0;1mSELECT * FROM "users" [0m
+Completed in 0.01725 (57 reqs/sec) | Rendering: 0.00740 (42%) | DB: 0.00090 (5%) | 200 OK [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#destroy (for 192.168.10.181 at 2009-01-17 17:25:05) [DELETE]
+  Session ID: e0201ba72bafe4864f7d9222618ff294
+  Parameters: {"format"=>"xml", "action"=>"destroy", "id"=>"343", "controller"=>"users"}
+  [4;35;1mUser Load (0.000406)[0m   [0mSELECT * FROM "users" WHERE ("users"."id" = 343) [0m
+  [4;36;1mUser Destroy (0.000537)[0m   [0;1m DELETE FROM "users"
+ WHERE "id" = 343
+[0m
+Completed in 0.01872 (53 reqs/sec) | Rendering: 0.00056 (2%) | DB: 0.00094 (5%) | 200 OK [http://192.168.10.181/users/343.xml]
+
+
+Processing UsersController#destroy (for 192.168.10.181 at 2009-01-17 17:25:05) [DELETE]
+  Session ID: f3e6fe9fb237a6c09e1be6c5cd373c79
+  Parameters: {"format"=>"xml", "action"=>"destroy", "id"=>"344", "controller"=>"users"}
+  [4;35;1mUser Load (0.000351)[0m   [0mSELECT * FROM "users" WHERE ("users"."id" = 344) [0m
+  [4;36;1mUser Destroy (0.000585)[0m   [0;1m DELETE FROM "users"
+ WHERE "id" = 344
+[0m
+Completed in 0.01553 (64 reqs/sec) | Rendering: 0.00040 (2%) | DB: 0.00094 (6%) | 200 OK [http://192.168.10.181/users/344.xml]
+
+
+Processing UsersController#destroy (for 192.168.10.181 at 2009-01-17 17:25:05) [DELETE]
+  Session ID: b1e3a7586acdd6eb9996086e9066d83d
+  Parameters: {"format"=>"xml", "action"=>"destroy", "id"=>"345", "controller"=>"users"}
+  [4;35;1mUser Load (0.000300)[0m   [0mSELECT * FROM "users" WHERE ("users"."id" = 345) [0m
+  [4;36;1mUser Destroy (0.000670)[0m   [0;1m DELETE FROM "users"
+ WHERE "id" = 345
+[0m
+Completed in 0.01270 (78 reqs/sec) | Rendering: 0.00098 (7%) | DB: 0.00097 (7%) | 200 OK [http://192.168.10.181/users/345.xml]
+
+
+Processing UsersController#index (for 192.168.10.181 at 2009-01-17 17:25:05) [GET]
+  Session ID: e72fffb79d5d7340b2c5603f18690d0b
+  Parameters: {"format"=>"xml", "action"=>"index", "controller"=>"users"}
+  [4;35;1mUser Load (0.001188)[0m   [0mSELECT * FROM "users" [0m
+Completed in 0.01040 (96 reqs/sec) | Rendering: 0.00066 (6%) | DB: 0.00119 (11%) | 200 OK [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#index (for 192.168.10.181 at 2009-01-17 17:25:06) [GET]
+  Session ID: d0a1cfadbea77779bfba30ee7d34228b
+  Parameters: {"format"=>"xml", "action"=>"index", "controller"=>"users"}
+  [4;36;1mUser Load (0.000491)[0m   [0;1mSELECT * FROM "users" [0m
+Completed in 0.00762 (131 reqs/sec) | Rendering: 0.00062 (8%) | DB: 0.00049 (6%) | 200 OK [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#create (for 192.168.10.181 at 2009-01-17 17:25:08) [POST]
+  Session ID: 46956cc62fd080cfee424376ba130665
+  Parameters: {"user"=>{"name"=>"forGetRecord1", "key"=>"51"}, "format"=>"xml", "from"=>"unittest", "action"=>"create", "controller"=>"users"}
+  [4;35;1mSQL (0.000521)[0m   [0mSELECT "key" FROM "users" WHERE ("users".key = '51') [0m
+  [4;36;1mUser Create (0.000643)[0m   [0;1mINSERT INTO "users" ("name", "updated_at", "key", "created_at") VALUES('forGetRecord1', '2009-01-17 08:25:08', '51', '2009-01-17 08:25:08')[0m
+Completed in 0.01705 (58 reqs/sec) | Rendering: 0.00135 (7%) | DB: 0.00116 (6%) | 201 Created [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#show (for 192.168.10.181 at 2009-01-17 17:25:08) [GET]
+  Session ID: b346f9005332324f34dd87eb2c45673e
+  Parameters: {"format"=>"xml", "action"=>"show", "id"=>"346", "controller"=>"users"}
+  [4;35;1mUser Load (0.000274)[0m   [0mSELECT * FROM "users" WHERE ("users"."id" = 346) [0m
+Completed in 0.01059 (94 reqs/sec) | Rendering: 0.00219 (20%) | DB: 0.00027 (2%) | 200 OK [http://192.168.10.181/users/346.xml]
+
+
+Processing UsersController#index (for 192.168.10.181 at 2009-01-17 17:25:08) [GET]
+  Session ID: c1f282f0fad236a2228b1a5bc7d37797
+  Parameters: {"format"=>"xml", "action"=>"index", "controller"=>"users"}
+  [4;36;1mUser Load (0.000777)[0m   [0;1mSELECT * FROM "users" [0m
+Completed in 0.01170 (85 reqs/sec) | Rendering: 0.00362 (30%) | DB: 0.00078 (6%) | 200 OK [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#destroy (for 192.168.10.181 at 2009-01-17 17:25:08) [DELETE]
+  Session ID: 275af8390c3d18292fb4435f61134693
+  Parameters: {"format"=>"xml", "action"=>"destroy", "id"=>"346", "controller"=>"users"}
+  [4;35;1mUser Load (0.000286)[0m   [0mSELECT * FROM "users" WHERE ("users"."id" = 346) [0m
+  [4;36;1mUser Destroy (0.000414)[0m   [0;1m DELETE FROM "users"
+ WHERE "id" = 346
+[0m
+Completed in 0.01427 (70 reqs/sec) | Rendering: 0.00055 (3%) | DB: 0.00070 (4%) | 200 OK [http://192.168.10.181/users/346.xml]
+
+
+Processing UsersController#create (for 192.168.10.181 at 2009-01-17 17:25:10) [POST]
+  Session ID: f92681c79de002fa3369ac46bd7ea259
+  Parameters: {"user"=>{"name"=>"forGetRecord1", "key"=>"41"}, "format"=>"xml", "from"=>"unittest", "action"=>"create", "controller"=>"users"}
+  [4;35;1mSQL (0.000231)[0m   [0mSELECT "key" FROM "users" WHERE ("users".key = '41') [0m
+  [4;36;1mUser Create (0.000735)[0m   [0;1mINSERT INTO "users" ("name", "updated_at", "key", "created_at") VALUES('forGetRecord1', '2009-01-17 08:25:10', '41', '2009-01-17 08:25:10')[0m
+Completed in 0.01849 (54 reqs/sec) | Rendering: 0.00218 (11%) | DB: 0.00097 (5%) | 201 Created [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#show (for 192.168.10.181 at 2009-01-17 17:25:11) [GET]
+  Session ID: 4e03e89733831adfc23cdb8537f6acc5
+  Parameters: {"format"=>"xml", "action"=>"show", "id"=>"347", "controller"=>"users"}
+  [4;35;1mUser Load (0.000276)[0m   [0mSELECT * FROM "users" WHERE ("users"."id" = 347) [0m
+Completed in 0.01096 (91 reqs/sec) | Rendering: 0.00205 (18%) | DB: 0.00028 (2%) | 200 OK [http://192.168.10.181/users/347.xml]
+
+
+Processing UsersController#index (for 192.168.10.181 at 2009-01-17 17:25:11) [GET]
+  Session ID: f6750ce092f4d16061408c2b0d1310d5
+  Parameters: {"format"=>"xml", "action"=>"index", "controller"=>"users"}
+  [4;36;1mUser Load (0.000724)[0m   [0;1mSELECT * FROM "users" [0m
+Completed in 0.01252 (79 reqs/sec) | Rendering: 0.00334 (26%) | DB: 0.00072 (5%) | 200 OK [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#destroy (for 192.168.10.181 at 2009-01-17 17:25:11) [DELETE]
+  Session ID: 3841b27347e513e0d44fe0c487024aa8
+  Parameters: {"format"=>"xml", "action"=>"destroy", "id"=>"347", "controller"=>"users"}
+  [4;35;1mUser Load (0.000278)[0m   [0mSELECT * FROM "users" WHERE ("users"."id" = 347) [0m
+  [4;36;1mUser Destroy (0.000423)[0m   [0;1m DELETE FROM "users"
+ WHERE "id" = 347
+[0m
+Completed in 0.01265 (79 reqs/sec) | Rendering: 0.00037 (2%) | DB: 0.00070 (5%) | 200 OK [http://192.168.10.181/users/347.xml]
+
+
+Processing UsersController#create (for 192.168.10.181 at 2009-01-17 17:25:13) [POST]
+  Session ID: 53ea4f049e0b2d88103db28b2a679765
+  Parameters: {"user"=>{"name"=>"postTestForDOM", "key"=>"12"}, "format"=>"xml", "from"=>"unittest", "action"=>"create", "controller"=>"users"}
+  [4;35;1mSQL (0.000169)[0m   [0mSELECT "key" FROM "users" WHERE ("users".key = '12') [0m
+  [4;36;1mUser Create (0.000481)[0m   [0;1mINSERT INTO "users" ("name", "updated_at", "key", "created_at") VALUES('postTestForDOM', '2009-01-17 08:25:13', '12', '2009-01-17 08:25:13')[0m
+Completed in 0.01768 (56 reqs/sec) | Rendering: 0.00182 (10%) | DB: 0.00065 (3%) | 201 Created [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#index (for 192.168.10.181 at 2009-01-17 17:25:13) [GET]
+  Session ID: 33d94d23e60c0073eeca944e6ac32353
+  Parameters: {"format"=>"xml", "action"=>"index", "controller"=>"users"}
+  [4;35;1mUser Load (0.000707)[0m   [0mSELECT * FROM "users" [0m
+Completed in 0.01029 (97 reqs/sec) | Rendering: 0.00304 (29%) | DB: 0.00071 (6%) | 200 OK [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#destroy (for 192.168.10.181 at 2009-01-17 17:25:14) [DELETE]
+  Session ID: a1aebee81953f19d9e451fbbb77bcaa2
+  Parameters: {"format"=>"xml", "action"=>"destroy", "id"=>"348", "controller"=>"users"}
+  [4;36;1mUser Load (0.000324)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 348) [0m
+  [4;35;1mUser Destroy (0.000473)[0m   [0m DELETE FROM "users"
+ WHERE "id" = 348
+[0m
+Completed in 0.01483 (67 reqs/sec) | Rendering: 0.00058 (3%) | DB: 0.00080 (5%) | 200 OK [http://192.168.10.181/users/348.xml]
+
+
+Processing UsersController#create (for 192.168.10.181 at 2009-01-17 17:25:16) [POST]
+  Session ID: e85ca87aaa9cfeb381ad7b8b8129c50d
+  Parameters: {"user"=>{"name"=>"postTestForString", "key"=>"11"}, "format"=>"xml", "from"=>"unittest", "action"=>"create", "controller"=>"users"}
+  [4;36;1mSQL (0.000194)[0m   [0;1mSELECT "key" FROM "users" WHERE ("users".key = '11') [0m
+  [4;35;1mUser Create (0.001008)[0m   [0mINSERT INTO "users" ("name", "updated_at", "key", "created_at") VALUES('postTestForString', '2009-01-17 08:25:16', '11', '2009-01-17 08:25:16')[0m
+Completed in 0.01917 (52 reqs/sec) | Rendering: 0.00191 (9%) | DB: 0.00120 (6%) | 201 Created [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#index (for 192.168.10.181 at 2009-01-17 17:25:16) [GET]
+  Session ID: d0dd58b0967d67cb08ab826ed9afa5f5
+  Parameters: {"format"=>"xml", "action"=>"index", "controller"=>"users"}
+  [4;36;1mUser Load (0.000671)[0m   [0;1mSELECT * FROM "users" [0m
+Completed in 0.01048 (95 reqs/sec) | Rendering: 0.00302 (28%) | DB: 0.00067 (6%) | 200 OK [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#destroy (for 192.168.10.181 at 2009-01-17 17:25:16) [DELETE]
+  Session ID: 65e4d680abd8010f66f8503cfc66f03e
+  Parameters: {"format"=>"xml", "action"=>"destroy", "id"=>"349", "controller"=>"users"}
+  [4;35;1mUser Load (0.000331)[0m   [0mSELECT * FROM "users" WHERE ("users"."id" = 349) [0m
+  [4;36;1mUser Destroy (0.000477)[0m   [0;1m DELETE FROM "users"
+ WHERE "id" = 349
+[0m
+Completed in 0.01392 (71 reqs/sec) | Rendering: 0.00054 (3%) | DB: 0.00081 (5%) | 200 OK [http://192.168.10.181/users/349.xml]
+
+
+Processing UsersController#create (for 192.168.10.181 at 2009-01-17 17:25:18) [POST]
+  Session ID: 7ea257cc71429a9533023e5f00883f1f
+  Parameters: {"user"=>{"name"=>"forPutRecord1", "key"=>"62"}, "format"=>"xml", "from"=>"unittest", "action"=>"create", "controller"=>"users"}
+  [4;35;1mSQL (0.000315)[0m   [0mSELECT "key" FROM "users" WHERE ("users".key = '62') [0m
+  [4;36;1mUser Create (0.000460)[0m   [0;1mINSERT INTO "users" ("name", "updated_at", "key", "created_at") VALUES('forPutRecord1', '2009-01-17 08:25:18', '62', '2009-01-17 08:25:18')[0m
+Completed in 0.01702 (58 reqs/sec) | Rendering: 0.00201 (11%) | DB: 0.00078 (4%) | 201 Created [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#update (for 192.168.10.181 at 2009-01-17 17:25:20) [PUT]
+  Session ID: 5b8862594f3d56d267f463a914ebdce8
+  Parameters: {"user"=>{"name"=>"forPutRecord2Modified", "id"=>"350", "key"=>"62"}, "format"=>"xml", "from"=>"unittest", "action"=>"update", "id"=>"350", "controller"=>"users"}
+  [4;35;1mUser Load (0.000281)[0m   [0mSELECT * FROM "users" WHERE ("users"."id" = 350) [0m
+WARNING: Can't mass-assign these protected attributes: id
+  [4;36;1mSQL (0.000171)[0m   [0;1mSELECT "key" FROM "users" WHERE ("users".key = '62' AND "users".id <> 350) [0m
+  [4;35;1mUser Update (0.000470)[0m   [0mUPDATE "users" SET "name" = 'forPutRecord2Modified', "updated_at" = '2009-01-17 08:25:20' WHERE "id" = 350[0m
+Completed in 0.01635 (61 reqs/sec) | Rendering: 0.00062 (3%) | DB: 0.00092 (5%) | 200 OK [http://192.168.10.181/users/350.xml]
+
+
+Processing UsersController#show (for 192.168.10.181 at 2009-01-17 17:25:20) [GET]
+  Session ID: f781e9e240ca043e76a4f451d241d86c
+  Parameters: {"format"=>"xml", "action"=>"show", "id"=>"350", "controller"=>"users"}
+  [4;36;1mUser Load (0.000299)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 350) [0m
+Completed in 0.01212 (82 reqs/sec) | Rendering: 0.00210 (17%) | DB: 0.00030 (2%) | 200 OK [http://192.168.10.181/users/350.xml]
+
+
+Processing UsersController#index (for 192.168.10.181 at 2009-01-17 17:25:21) [GET]
+  Session ID: 97993ecd6eae5a390680187b8ede639e
+  Parameters: {"format"=>"xml", "action"=>"index", "controller"=>"users"}
+  [4;35;1mUser Load (0.000630)[0m   [0mSELECT * FROM "users" [0m
+Completed in 0.01096 (91 reqs/sec) | Rendering: 0.00366 (33%) | DB: 0.00063 (5%) | 200 OK [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#destroy (for 192.168.10.181 at 2009-01-17 17:25:21) [DELETE]
+  Session ID: c05e74e0bca5c8683cce2b9d0fb3c9c1
+  Parameters: {"format"=>"xml", "action"=>"destroy", "id"=>"350", "controller"=>"users"}
+  [4;36;1mUser Load (0.000357)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 350) [0m
+  [4;35;1mUser Destroy (0.000468)[0m   [0m DELETE FROM "users"
+ WHERE "id" = 350
+[0m
+Completed in 0.01468 (68 reqs/sec) | Rendering: 0.00035 (2%) | DB: 0.00082 (5%) | 200 OK [http://192.168.10.181/users/350.xml]
+
+
+Processing UsersController#create (for 192.168.10.181 at 2009-01-17 17:25:23) [POST]
+  Session ID: bf294bdc5cf518ceba2ed59ac6637990
+  Parameters: {"user"=>{"name"=>"forPutRecord1", "key"=>"61"}, "format"=>"xml", "from"=>"unittest", "action"=>"create", "controller"=>"users"}
+  [4;36;1mSQL (0.000528)[0m   [0;1mSELECT "key" FROM "users" WHERE ("users".key = '61') [0m
+  [4;35;1mUser Create (0.000490)[0m   [0mINSERT INTO "users" ("name", "updated_at", "key", "created_at") VALUES('forPutRecord1', '2009-01-17 08:25:23', '61', '2009-01-17 08:25:23')[0m
+Completed in 0.02197 (45 reqs/sec) | Rendering: 0.00362 (16%) | DB: 0.00102 (4%) | 201 Created [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#update (for 192.168.10.181 at 2009-01-17 17:25:25) [PUT]
+  Session ID: e1054d6916ba26d0bbacf521d184ffce
+  Parameters: {"user"=>{"name"=>"forPutRecord1Modified", "id"=>"351", "key"=>"61"}, "format"=>"xml", "from"=>"unittest", "action"=>"update", "id"=>"351", "controller"=>"users"}
+  [4;36;1mUser Load (0.000546)[0m   [0;1mSELECT * FROM "users" WHERE ("users"."id" = 351) [0m
+WARNING: Can't mass-assign these protected attributes: id
+  [4;35;1mSQL (0.000253)[0m   [0mSELECT "key" FROM "users" WHERE ("users".key = '61' AND "users".id <> 351) [0m
+  [4;36;1mUser Update (0.000435)[0m   [0;1mUPDATE "users" SET "name" = 'forPutRecord1Modified', "updated_at" = '2009-01-17 08:25:25' WHERE "id" = 351[0m
+Completed in 0.01683 (59 reqs/sec) | Rendering: 0.00049 (2%) | DB: 0.00123 (7%) | 200 OK [http://192.168.10.181/users/351.xml]
+
+
+Processing UsersController#show (for 192.168.10.181 at 2009-01-17 17:25:25) [GET]
+  Session ID: 3c40555531982868f39e4a42b1d25cfe
+  Parameters: {"user"=>{"name"=>"forPutRecord1Modified", "id"=>"351", "key"=>"61"}, "format"=>"xml", "from"=>"unittest", "action"=>"show", "id"=>"351", "controller"=>"users"}
+  [4;35;1mUser Load (0.000276)[0m   [0mSELECT * FROM "users" WHERE ("users"."id" = 351) [0m
+Completed in 0.00991 (100 reqs/sec) | Rendering: 0.00194 (19%) | DB: 0.00028 (2%) | 200 OK [http://192.168.10.181/users/351.xml?user%5Bid%5D=351&user%5Bname%5D=forPutRecord1Modified&from=unittest&user%5Bkey%5D=61]
+
+
+Processing UsersController#index (for 192.168.10.181 at 2009-01-17 17:25:26) [GET]
+  Session ID: 7bdc5ee9d5cb3fe8c926006e5d604ea1
+  Parameters: {"format"=>"xml", "action"=>"index", "controller"=>"users"}
+  [4;36;1mUser Load (0.000658)[0m   [0;1mSELECT * FROM "users" [0m
+Completed in 0.01607 (62 reqs/sec) | Rendering: 0.00568 (35%) | DB: 0.00066 (4%) | 200 OK [http://192.168.10.181/users.xml]
+
+
+Processing UsersController#destroy (for 192.168.10.181 at 2009-01-17 17:25:26) [DELETE]
+  Session ID: 3dd901e39d1ecc7c60de856d73cfa7c2
+  Parameters: {"format"=>"xml", "action"=>"destroy", "id"=>"351", "controller"=>"users"}
+  [4;35;1mUser Load (0.000628)[0m   [0mSELECT * FROM "users" WHERE ("users"."id" = 351) [0m
+  [4;36;1mUser Destroy (0.000446)[0m   [0;1m DELETE FROM "users"
+ WHERE "id" = 351
+[0m
+Completed in 0.01640 (60 reqs/sec) | Rendering: 0.00038 (2%) | DB: 0.00107 (6%) | 200 OK [http://192.168.10.181/users/351.xml]

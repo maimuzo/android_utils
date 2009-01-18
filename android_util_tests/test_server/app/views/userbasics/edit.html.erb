@@ -1,0 +1,20 @@
+<h1>Editing userbasic</h1>
+
+<% form_for(@userbasic) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :key %><br />
+    <%= f.text_field :key %>
+  </p>
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @userbasic %> |
+<%= link_to 'Back', userbasics_path %>

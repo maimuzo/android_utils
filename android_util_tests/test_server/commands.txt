@@ -4,6 +4,7 @@ Generate project and pages:
 rails test_server
 cd test_server
 script/generate scaffold User key:string, name:string
+script/generate scaffold Userbasic key:string, name:string
 
 Edit next file:
 app/models/users.rb
@@ -11,6 +12,19 @@ app/models/users.rb
 class User < ActiveRecord::Base
 >  validates_presence_of :key, :name
 >  validates_uniqueness_of :key
+end
+
+app/comtrollers/userbasics_controller.rb
+
+class UserbasicsController < ApplicationController
+>  before_filter :auth
+>private
+>
+>  def auth
+>    authenticate_or_request_with_http_basic do |user, pass|
+>      user == 'basic' && pass == 'pass'
+>    end
+>  end
 end
 
 Migration:

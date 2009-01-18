@@ -1,0 +1,22 @@
+<h1>Listing userbasics</h1>
+
+<table>
+  <tr>
+    <th>Key</th>
+    <th>Name</th>
+  </tr>
+
+<% for userbasic in @userbasics %>
+  <tr>
+    <td><%=h userbasic.key %></td>
+    <td><%=h userbasic.name %></td>
+    <td><%= link_to 'Show', userbasic %></td>
+    <td><%= link_to 'Edit', edit_userbasic_path(userbasic) %></td>
+    <td><%= link_to 'Destroy', userbasic, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New userbasic', new_userbasic_path %>
