@@ -8,7 +8,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.http.client.ClientProtocolException;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -30,6 +29,8 @@ public class RestfulClientTest extends AndroidTestCase {
 	private DocumentBuilder builder;
 	
     protected void setUp() {
+    	RestfulClient.basicAuthUsername = "";
+    	RestfulClient.basicAuthPassword = "";
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		//factory.setNamespaceAware(true);
 		//factory.setValidating(true);
@@ -110,6 +111,50 @@ public class RestfulClientTest extends AndroidTestCase {
     public void testShouldGetListAndGetString() {
     	try {
     		String result = RestfulClient.Get(HOST + "/users.xml", null);
+    		Log.v(TAG, result);
+    		assertTrue(null != result);
+			return;
+		} catch (ClientProtocolException e) {
+			Log.v(TAG, e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			Log.v(TAG, e.getMessage());
+			e.printStackTrace();
+		}
+		assertTrue(false);
+    }
+    
+    public void testShouldGetListAndGetStringUsingBasicAuth() {
+    	RestfulClient.basicAuthUsername = "";
+    	RestfulClient.basicAuthPassword = "";
+    	try {
+    		RestfulClient.Get(HOST + "/userbasics.xml", null);
+    		assertTrue(false);
+		} catch (ClientProtocolException e) {
+			Log.v(TAG, e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			Log.v(TAG, e.getMessage());
+			e.printStackTrace();
+		}
+		assertTrue(true);
+    	RestfulClient.basicAuthUsername = "hoge";
+    	RestfulClient.basicAuthPassword = "";
+    	try {
+    		RestfulClient.Get(HOST + "/userbasics.xml", null);
+    		assertTrue(false);
+		} catch (ClientProtocolException e) {
+			Log.v(TAG, e.getMessage());
+			e.printStackTrace();
+		} catch (IOException e) {
+			Log.v(TAG, e.getMessage());
+			e.printStackTrace();
+		}
+		assertTrue(true);
+    	RestfulClient.basicAuthUsername = "basic";
+    	RestfulClient.basicAuthPassword = "pass";
+    	try {
+    		String result = RestfulClient.Get(HOST + "/userbasics.xml", null);
     		Log.v(TAG, result);
     		assertTrue(null != result);
 			return;
