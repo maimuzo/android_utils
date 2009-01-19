@@ -172,7 +172,6 @@ public class RestfulClient {
 				new AuthScope(uri.getHost(), uri.getPort()),
 				new UsernamePasswordCredentials(basicAuthUsername, basicAuthPassword));
 		}
-		
 		HttpResponse response = null;
 		
 		try {

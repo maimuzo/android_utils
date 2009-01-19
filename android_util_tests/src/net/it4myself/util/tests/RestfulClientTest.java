@@ -168,6 +168,7 @@ public class RestfulClientTest extends AndroidTestCase {
 		assertTrue(false);
     }
 
+    
     public void testShouldGetListAndGetDOM() {
     	try {
     		deleteAll();
