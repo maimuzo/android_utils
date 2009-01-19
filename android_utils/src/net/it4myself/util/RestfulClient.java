@@ -3,6 +3,7 @@ package net.it4myself.util;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,8 +17,9 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
@@ -38,6 +40,8 @@ import android.util.Log;
 
 public class RestfulClient {
     private static final String TAG = "Restful";
+    public static String basicAuthUsername = "";
+    public static String basicAuthPassword = "";
 
 	public static String Get(String uri, HashMap<String,String> map) throws ClientProtocolException, IOException {
 		String fulluri;
@@ -159,7 +163,16 @@ public class RestfulClient {
 
 	
 	private static HttpEntity DoRequest(HttpUriRequest method) throws ClientProtocolException, IOException {
-		HttpClient client = new DefaultHttpClient();
+		DefaultHttpClient client = new DefaultHttpClient();
+		
+		// BASIC認証用のユーザ名が設定されていれば、BASIC認証を行う
+		if(!basicAuthUsername.equals("")){
+			URI uri = method.getURI();
+			client.getCredentialsProvider().setCredentials(
+				new AuthScope(uri.getHost(), uri.getPort()),
+				new UsernamePasswordCredentials(basicAuthUsername, basicAuthPassword));
+		}
+		
 		HttpResponse response = null;
 		
 		try {
