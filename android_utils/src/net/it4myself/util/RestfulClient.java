@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -35,6 +38,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.util.Log;
 
@@ -68,8 +75,34 @@ public class RestfulClient {
 		HttpGet method = new HttpGet(fulluri);
 		return getDOM(DoRequest(method), builder);
 	}
+	
+    public static void Get(String uri, HashMap<String,String> map, DefaultHandler handler) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
+        String fulluri;
 
-	public static String Post(String uri, HashMap<String,String> map) throws ClientProtocolException, IOException {
+        if(null == map){
+            fulluri = uri;
+        } else {
+            fulluri = uri + packQueryString(map);
+        }
+        
+        HttpGet method = new HttpGet(fulluri);
+        parseBySAX(DoRequest(method), handler);
+    }
+
+    public static void Get(String uri, HashMap<String,String> map, CustomPullParser pullParser) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
+        String fulluri;
+
+        if(null == map){
+            fulluri = uri;
+        } else {
+            fulluri = uri + packQueryString(map);
+        }
+        
+        HttpGet method = new HttpGet(fulluri);
+        parseByPullParser(DoRequest(method), pullParser);
+    }
+
+    public static String Post(String uri, HashMap<String,String> map) throws ClientProtocolException, IOException {
 		HttpPost method = new HttpPost(uri);
 		if(null != map){
 			List<NameValuePair> paramList = packEntryParams(map);
@@ -87,7 +120,25 @@ public class RestfulClient {
 		return getDOM(DoRequest(method), builder);
 	}
 
-	public static String Put(String uri, HashMap<String,String> map) throws ClientProtocolException, IOException {
+    public static void Post(String uri, HashMap<String,String> map, DefaultHandler handler) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
+        HttpPost method = new HttpPost(uri);
+        if(null != map){
+            List<NameValuePair> paramList = packEntryParams(map);
+            method.setEntity(new UrlEncodedFormEntity(paramList, HTTP.UTF_8));
+        }
+        parseBySAX(DoRequest(method), handler);
+    }
+	
+    public static void Post(String uri, HashMap<String,String> map, CustomPullParser pullParser) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
+        HttpPost method = new HttpPost(uri);
+        if(null != map){
+            List<NameValuePair> paramList = packEntryParams(map);
+            method.setEntity(new UrlEncodedFormEntity(paramList, HTTP.UTF_8));
+        }
+        parseByPullParser(DoRequest(method), pullParser);
+    }
+
+    public static String Put(String uri, HashMap<String,String> map) throws ClientProtocolException, IOException {
 		HttpPut method = new HttpPut(uri);
 		if(null != map){
 			List<NameValuePair> paramList = packEntryParams(map);
@@ -105,7 +156,25 @@ public class RestfulClient {
 		return getDOM(DoRequest(method), builder);
 	}
 
-	public static String Delete(String uri, HashMap<String,String> map) throws ClientProtocolException, IOException {
+    public static void Put(String uri, HashMap<String,String> map, DefaultHandler handler) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
+        HttpPut method = new HttpPut(uri);
+        if(null != map){
+            List<NameValuePair> paramList = packEntryParams(map);
+            method.setEntity(new UrlEncodedFormEntity(paramList, HTTP.UTF_8));
+        }
+        parseBySAX(DoRequest(method), handler);
+    }
+
+    public static void Put(String uri, HashMap<String,String> map, CustomPullParser pullParser) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
+        HttpPut method = new HttpPut(uri);
+        if(null != map){
+            List<NameValuePair> paramList = packEntryParams(map);
+            method.setEntity(new UrlEncodedFormEntity(paramList, HTTP.UTF_8));
+        }
+        parseByPullParser(DoRequest(method), pullParser);
+    }
+
+    public static String Delete(String uri, HashMap<String,String> map) throws ClientProtocolException, IOException {
 		String fulluri;
 
 		if(null == map){
@@ -131,7 +200,33 @@ public class RestfulClient {
 		return getDOM(DoRequest(method), builder);
 	}
 	
-	/*
+    public static void Delete(String uri, HashMap<String,String> map, DefaultHandler handler) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
+        String fulluri;
+
+        if(null == map){
+            fulluri = uri;
+        } else {
+            fulluri = uri + packQueryString(map);
+        }
+        
+        HttpDelete method = new HttpDelete(fulluri);
+        parseBySAX(DoRequest(method), handler);
+    }
+
+    public static void Delete(String uri, HashMap<String,String> map, CustomPullParser pullParser) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
+        String fulluri;
+
+        if(null == map){
+            fulluri = uri;
+        } else {
+            fulluri = uri + packQueryString(map);
+        }
+        
+        HttpDelete method = new HttpDelete(fulluri);
+        parseByPullParser(DoRequest(method), pullParser);
+    }
+
+    /*
 	 * DocumentBuilderFactory.newInstance()
 	 * 	.setValidating(true)
 	 * 	.setIgnoringElementContentWhitespace(true)
@@ -240,4 +335,65 @@ public class RestfulClient {
 			is.close();
 		}
 	}
+	
+    private static void parseBySAX(HttpEntity entity, DefaultHandler handler) throws ParserConfigurationException, IllegalStateException, IOException, SAXException{
+        BufferedInputStream is = new BufferedInputStream(entity.getContent());
+        try {
+            SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+            SAXParser saxParser = saxParserFactory.newSAXParser();
+            saxParser.parse(is, handler);
+        } finally{
+            is.close();
+        }
+    }
+    
+    private static void parseByPullParser(HttpEntity entity, CustomPullParser pullParser) throws ParserConfigurationException, IllegalStateException, IOException, SAXException{
+        BufferedInputStream is = new BufferedInputStream(entity.getContent());
+        try {
+            pullParser.parseByPullParser(is);
+        } finally{
+            is.close();
+        }
+    }
+
+    public interface CustomPullParser {
+        void parseByPullParser(BufferedInputStream is);
+    }
+
+    /**
+     * Example of CustomPullParser
+     * 
+    public class ExampleCustomPullParser implements CustomPullParser{
+        public void parseByPullParser(BufferedInputStream is){
+            XmlPullParserFactory factory;
+            try {
+                factory = XmlPullParserFactory.newInstance();
+                XmlPullParser xpp = factory.newPullParser();
+                xpp.setInput(is, "UTF-8");
+                int eventType = xpp.getEventType();
+                while (eventType != XmlPullParser.END_DOCUMENT) {
+                    if (eventType == XmlPullParser.START_DOCUMENT) {
+                        System.out.println("Start document");
+                    } else if (eventType == XmlPullParser.END_DOCUMENT) {
+                        System.out.println("End document");
+                    } else if (eventType == XmlPullParser.START_TAG) {
+                        System.out.println("Start tag " + xpp.getName());
+                    } else if (eventType == XmlPullParser.END_TAG) {
+                        System.out.println("End tag " + xpp.getName());
+                    } else if (eventType == XmlPullParser.TEXT) {
+                        System.out.println("Text " + xpp.getText());
+                    }
+                    eventType = xpp.next();
+                }
+            } catch (XmlPullParserException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+    */
+
 }
