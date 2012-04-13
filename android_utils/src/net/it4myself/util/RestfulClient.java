@@ -1,7 +1,9 @@
 package net.it4myself.util;
 
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -50,7 +52,7 @@ public class RestfulClient {
     public static String basicAuthUsername = "";
     public static String basicAuthPassword = "";
 
-	public static String Get(String uri, HashMap<String,String> map) throws ClientProtocolException, IOException {
+	public static String get(String uri, HashMap<String,String> map) throws ClientProtocolException, IOException {
 		String fulluri;
 
 		if(null == map){
@@ -60,10 +62,10 @@ public class RestfulClient {
 		}
 		
 		HttpGet method = new HttpGet(fulluri);
-		return EntityUtils.toString(DoRequest(method));
+		return EntityUtils.toString(doRequest(method));
 	}
 
-	public static Document Get(String uri, HashMap<String,String> map, DocumentBuilder builder) throws ClientProtocolException, IOException, SAXException {
+	public static Document get(String uri, HashMap<String,String> map, DocumentBuilder builder) throws ClientProtocolException, IOException, SAXException {
 		String fulluri;
 
 		if(null == map){
@@ -73,10 +75,10 @@ public class RestfulClient {
 		}
 		
 		HttpGet method = new HttpGet(fulluri);
-		return getDOM(DoRequest(method), builder);
+		return getDOM(doRequest(method), builder);
 	}
 	
-    public static void Get(String uri, HashMap<String,String> map, DefaultHandler handler) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
+    public static void get(String uri, HashMap<String,String> map, DefaultHandler handler) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
         String fulluri;
 
         if(null == map){
@@ -86,10 +88,10 @@ public class RestfulClient {
         }
         
         HttpGet method = new HttpGet(fulluri);
-        parseBySAX(DoRequest(method), handler);
+        parseBySAX(doRequest(method), handler);
     }
 
-    public static void Get(String uri, HashMap<String,String> map, CustomPullParser pullParser) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
+    public static void get(String uri, HashMap<String,String> map, CustomPullParser pullParser) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
         String fulluri;
 
         if(null == map){
@@ -99,82 +101,100 @@ public class RestfulClient {
         }
         
         HttpGet method = new HttpGet(fulluri);
-        parseByPullParser(DoRequest(method), pullParser);
+        parseByPullParser(doRequest(method), pullParser);
     }
 
-    public static String Post(String uri, HashMap<String,String> map) throws ClientProtocolException, IOException {
+    public static void get(String uri, HashMap<String,String> map, OnAccessListener onAccessListener) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
+        String fulluri;
+
+        if(null == map){
+            fulluri = uri;
+        } else {
+            fulluri = uri + packQueryString(map);
+        }
+        
+        HttpGet method = new HttpGet(fulluri);
+        BufferedInputStream is = new BufferedInputStream(doRequest(method).getContent());
+        try {
+            onAccessListener.onAccess(is, uri);
+        } finally{
+            is.close();
+        }
+    }
+
+    public static String post(String uri, HashMap<String,String> map) throws ClientProtocolException, IOException {
 		HttpPost method = new HttpPost(uri);
 		if(null != map){
 			List<NameValuePair> paramList = packEntryParams(map);
 			method.setEntity(new UrlEncodedFormEntity(paramList, HTTP.UTF_8));
 		}
-		return EntityUtils.toString(DoRequest(method));
+		return EntityUtils.toString(doRequest(method));
 	}
 
-	public static Document Post(String uri, HashMap<String,String> map, DocumentBuilder builder) throws ClientProtocolException, IOException, SAXException {
+	public static Document post(String uri, HashMap<String,String> map, DocumentBuilder builder) throws ClientProtocolException, IOException, SAXException {
 		HttpPost method = new HttpPost(uri);
 		if(null != map){
 			List<NameValuePair> paramList = packEntryParams(map);
 			method.setEntity(new UrlEncodedFormEntity(paramList, HTTP.UTF_8));
 		}
-		return getDOM(DoRequest(method), builder);
+		return getDOM(doRequest(method), builder);
 	}
 
-    public static void Post(String uri, HashMap<String,String> map, DefaultHandler handler) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
+    public static void post(String uri, HashMap<String,String> map, DefaultHandler handler) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
         HttpPost method = new HttpPost(uri);
         if(null != map){
             List<NameValuePair> paramList = packEntryParams(map);
             method.setEntity(new UrlEncodedFormEntity(paramList, HTTP.UTF_8));
         }
-        parseBySAX(DoRequest(method), handler);
+        parseBySAX(doRequest(method), handler);
     }
 	
-    public static void Post(String uri, HashMap<String,String> map, CustomPullParser pullParser) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
+    public static void post(String uri, HashMap<String,String> map, CustomPullParser pullParser) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
         HttpPost method = new HttpPost(uri);
         if(null != map){
             List<NameValuePair> paramList = packEntryParams(map);
             method.setEntity(new UrlEncodedFormEntity(paramList, HTTP.UTF_8));
         }
-        parseByPullParser(DoRequest(method), pullParser);
+        parseByPullParser(doRequest(method), pullParser);
     }
 
-    public static String Put(String uri, HashMap<String,String> map) throws ClientProtocolException, IOException {
+    public static String put(String uri, HashMap<String,String> map) throws ClientProtocolException, IOException {
 		HttpPut method = new HttpPut(uri);
 		if(null != map){
 			List<NameValuePair> paramList = packEntryParams(map);
 			method.setEntity(new UrlEncodedFormEntity(paramList, HTTP.UTF_8));
 		}
-		return EntityUtils.toString(DoRequest(method));
+		return EntityUtils.toString(doRequest(method));
 	}
 
-	public static Document Put(String uri, HashMap<String,String> map, DocumentBuilder builder) throws ClientProtocolException, IOException, SAXException {
+	public static Document put(String uri, HashMap<String,String> map, DocumentBuilder builder) throws ClientProtocolException, IOException, SAXException {
 		HttpPut method = new HttpPut(uri);
 		if(null != map){
 			List<NameValuePair> paramList = packEntryParams(map);
 			method.setEntity(new UrlEncodedFormEntity(paramList, HTTP.UTF_8));
 		}
-		return getDOM(DoRequest(method), builder);
+		return getDOM(doRequest(method), builder);
 	}
 
-    public static void Put(String uri, HashMap<String,String> map, DefaultHandler handler) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
+    public static void put(String uri, HashMap<String,String> map, DefaultHandler handler) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
         HttpPut method = new HttpPut(uri);
         if(null != map){
             List<NameValuePair> paramList = packEntryParams(map);
             method.setEntity(new UrlEncodedFormEntity(paramList, HTTP.UTF_8));
         }
-        parseBySAX(DoRequest(method), handler);
+        parseBySAX(doRequest(method), handler);
     }
 
-    public static void Put(String uri, HashMap<String,String> map, CustomPullParser pullParser) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
+    public static void put(String uri, HashMap<String,String> map, CustomPullParser pullParser) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
         HttpPut method = new HttpPut(uri);
         if(null != map){
             List<NameValuePair> paramList = packEntryParams(map);
             method.setEntity(new UrlEncodedFormEntity(paramList, HTTP.UTF_8));
         }
-        parseByPullParser(DoRequest(method), pullParser);
+        parseByPullParser(doRequest(method), pullParser);
     }
 
-    public static String Delete(String uri, HashMap<String,String> map) throws ClientProtocolException, IOException {
+    public static String delete(String uri, HashMap<String,String> map) throws ClientProtocolException, IOException {
 		String fulluri;
 
 		if(null == map){
@@ -184,10 +204,10 @@ public class RestfulClient {
 		}
 		
 		HttpDelete method = new HttpDelete(fulluri);
-		return EntityUtils.toString(DoRequest(method));
+		return EntityUtils.toString(doRequest(method));
 	}
 
-	public static Document Delete(String uri, HashMap<String,String> map, DocumentBuilder builder) throws ClientProtocolException, IOException, SAXException {
+	public static Document delete(String uri, HashMap<String,String> map, DocumentBuilder builder) throws ClientProtocolException, IOException, SAXException {
 		String fulluri;
 
 		if(null == map){
@@ -197,10 +217,10 @@ public class RestfulClient {
 		}
 		
 		HttpDelete method = new HttpDelete(fulluri);
-		return getDOM(DoRequest(method), builder);
+		return getDOM(doRequest(method), builder);
 	}
 	
-    public static void Delete(String uri, HashMap<String,String> map, DefaultHandler handler) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
+    public static void delete(String uri, HashMap<String,String> map, DefaultHandler handler) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
         String fulluri;
 
         if(null == map){
@@ -210,10 +230,10 @@ public class RestfulClient {
         }
         
         HttpDelete method = new HttpDelete(fulluri);
-        parseBySAX(DoRequest(method), handler);
+        parseBySAX(doRequest(method), handler);
     }
 
-    public static void Delete(String uri, HashMap<String,String> map, CustomPullParser pullParser) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
+    public static void delete(String uri, HashMap<String,String> map, CustomPullParser pullParser) throws ClientProtocolException, IOException, SAXException, IllegalStateException, ParserConfigurationException {
         String fulluri;
 
         if(null == map){
@@ -223,7 +243,7 @@ public class RestfulClient {
         }
         
         HttpDelete method = new HttpDelete(fulluri);
-        parseByPullParser(DoRequest(method), pullParser);
+        parseByPullParser(doRequest(method), pullParser);
     }
 
     /*
@@ -237,7 +257,7 @@ public class RestfulClient {
 	 *  Node.normalize()もなんか変
 	 *  なので、自前で改行やスペースだけのテキストノードを削除する。
 	 */
-    public static Node RemoveEmptyNodes(Node currentNode) {
+    public static Node removeEmptyNodes(Node currentNode) {
         NodeList list = currentNode.getChildNodes();
         int n = list.getLength();
         if(0 < n){
@@ -249,7 +269,7 @@ public class RestfulClient {
                 	// Log.v(TAG, "remove " + Integer.toString(i) + "th node of " + currentNode.getNodeName());
                 	currentNode.removeChild(childNode);
                 }else{
-                	RemoveEmptyNodes(childNode);
+                	removeEmptyNodes(childNode);
                 }
             }
         }
@@ -257,7 +277,7 @@ public class RestfulClient {
     }
 
 	
-	private static HttpEntity DoRequest(HttpUriRequest method) throws ClientProtocolException, IOException {
+	private static HttpEntity doRequest(HttpUriRequest method) throws ClientProtocolException, IOException {
 		DefaultHttpClient client = new DefaultHttpClient();
 		
 		// BASIC認証用のユーザ名が設定されていれば、BASIC認証を行う
@@ -277,7 +297,7 @@ public class RestfulClient {
 			if (statuscode == HttpStatus.SC_OK | statuscode == HttpStatus.SC_CREATED){ 
 				return response.getEntity();
 			} else {
-				throw new HttpResponseException(statuscode, "Response code is " + Integer.toString(statuscode));
+				throw new HttpResponseException(statuscode, "Response code is " + Integer.toString(statuscode) + ", url:" + method.getURI());
 			}
 		}catch (RuntimeException e) {
 			method.abort();
@@ -360,6 +380,9 @@ public class RestfulClient {
         void parseByPullParser(BufferedInputStream is);
     }
 
+    public interface OnAccessListener{
+        void onAccess(BufferedInputStream is, String url);
+    }
     /**
      * Example of CustomPullParser
      * 
